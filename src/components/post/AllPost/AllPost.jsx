@@ -1,18 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-
-export const AllPost = () => {
-    const [allPost, setAllPost] = useState([])
-    const populateFunction = async() =>{
-        try{
-
-        }catch(err){
-            console.log(err)
-        }
-    }
+import { IndividualPost } from './IndividualPost/IndividualPost'
+export const AllPost = (props) => {
   return (
     <div>
-        <p>{}</p>
+        {props.allPost.length > 0 ? props.allPost.map((post)=>{
+            return <IndividualPost editPost={props.editPost} key={`${post.id}post`} post={post} deletePost={props.deletePost}/>
+        }) : null}
     </div>
   )
 }

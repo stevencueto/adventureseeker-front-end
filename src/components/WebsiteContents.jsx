@@ -128,9 +128,9 @@ export const WebsiteContents = () => {
   return (
     <main className="main-wrapper">
         <Header></Header>
+        <h1>Make A New Post</h1>
         <AllPost allPost={allPost} editPost={editPost} deletePost={deletePost}></AllPost>
         <NewPost handleNewPostChange={handleNewPostChange} newPost={newPost} getDate={getDate} makeNewPost={makeNewPost}/>
-        <h1>THIS</h1>
         <Footer></Footer>
     </main>
   )

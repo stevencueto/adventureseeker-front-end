@@ -34,22 +34,26 @@ export const WebsiteContents = () => {
         console.log(today, 'date')
       };
     const handleNewPostChange = (e) =>{
-        const {name, value} = e.target;
+        const {name, value, files, type} = e.target;
         setNewPost(prev => {
             return {
                 ...prev,
-                [name]: value
+                [name]: type === "files" ? files[0] : value
             }
         })
+        console.log(e.target)
     }
     const makeNewPost = async()=>{
+        const formData = new FormData();
+        for(const name in newPost) {
+            formData.append(name, newPost[name]);
+          }
         console.log(newPost)
         try {
             const request = await fetch(`http://127.0.0.1:8000/api/post/user/`, {
                 method: 'POST',
-                body: JSON.stringify(newPost),
-                headers: {
-                    'Content-Type': 'application/json',
+                body: formData,
+                    headers: {
                     'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })

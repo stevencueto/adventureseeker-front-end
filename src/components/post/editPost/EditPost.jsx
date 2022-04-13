@@ -18,11 +18,11 @@ export const EditPost = (props) => {
         props.hide(false)
     }
     const handleChange = (e) =>{
-        const {name, value} = e.target;
+        const {name, value, type, files} = e.target;
         setEdit(prev => {
             return {
                 ...prev,
-                [name]: value
+                [name]: type === "files" ? files[0] : value
             }
         })
     }
@@ -55,7 +55,7 @@ export const EditPost = (props) => {
             <input
 				value={edit.img}
 				onChange={(e) => handleChange (e)}
-				type="text"
+				type="file"
 				placeholder="Image"
                 name="img"
                 required

@@ -35,10 +35,9 @@ export const NewPost = (props) => {
             <input
 				value={props.newPost.img}
 				onChange={(e) => props.handleNewPostChange(e)}
-				type="text"
+				type="file"
 				placeholder="Image"
                 name="img"
-                required
             /><br/>
             <button>Submit</button>
         </form>

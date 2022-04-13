@@ -1,20 +1,20 @@
-import Header from "./header/Header"
-import Footer from "./footer/Footer"
+import {Route, Routes, useNavigate} from 'react-router-dom'
 import './websitecomponent.css'
 import { AllPost } from "./post/AllPost/AllPost"
 import { useState, useEffect } from "react"
 import { NewPost } from "./post/NewPost/NewPost"
+import APILink from "../apiConfig"
+import Login from './login/Login'
+import Register from './register/Register'
 export const WebsiteContents = () => {
-    const APILink = "https://adventureseekerapi.herokuapp.com/"
+    let navigate = useNavigate();
     const [allPost, setAllPost] = useState([])
     const [newPost, setNewPost] = useState({
         title: "",
         location:"",
         description: "",
         img: "",
-        current_date: "2022-04-19",
-        user: "",
-        likes: 20,
+        likes: 20
     })
     const getDate = () => {
         const date = new Date();
@@ -45,11 +45,12 @@ export const WebsiteContents = () => {
     const makeNewPost = async()=>{
         console.log(newPost)
         try {
-            const request = await fetch(`${APILink}api/post/`, {
+            const request = await fetch(`http://127.0.0.1:8000/api/post/user/`, {
                 method: 'POST',
                 body: JSON.stringify(newPost),
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
             if(request.status === 201){
@@ -60,11 +61,11 @@ export const WebsiteContents = () => {
                     location:"",
                     description: "",
                     img: "",
-                    current_date: "2022-04-19",
-                    user: "",
                     likes: 20,
                 })
+                navigate("/", { replace: true });
             }
+            console.log(request)
         } catch (error) {
             console.log(error)
             
@@ -78,6 +79,7 @@ export const WebsiteContents = () => {
                 body: JSON.stringify(post),
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
             if(request.status === 200){
@@ -99,6 +101,7 @@ export const WebsiteContents = () => {
                 body: JSON.stringify(post),
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
             console.log(request)
@@ -113,7 +116,12 @@ export const WebsiteContents = () => {
     }
     const populateFunction = async() =>{
         try{
-            const request = await fetch(`${APILink}api/post/`)
+            const request = await fetch(`${APILink}api/post/`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token')
+                }
+            })
             if(request.status === 200){
                 const response = await request.json()
                 setAllPost(response)
@@ -127,11 +135,14 @@ export const WebsiteContents = () => {
     }, [])
   return (
     <main className="main-wrapper">
-        <Header></Header>
-        <h1>Make A New Post</h1>
-        <AllPost allPost={allPost} editPost={editPost} deletePost={deletePost}></AllPost>
-        <NewPost handleNewPostChange={handleNewPostChange} newPost={newPost} getDate={getDate} makeNewPost={makeNewPost}/>
-        <Footer></Footer>
+        <Routes>
+            <Route path='/login' exact element={<Login/>}/>
+            <Route path='/register' exact element={<Register/>}/>
+            <Route path='/' exact element={<AllPost allPost={allPost} editPost={editPost} deletePost={deletePost}></AllPost>}/>
+            <Route path='/profile' exact/>
+            <Route path='/new' exact element={<NewPost handleNewPostChange={handleNewPostChange} newPost={newPost} getDate={getDate} makeNewPost={makeNewPost}/>}/>
+        </Routes>        
+        
     </main>
   )
 }

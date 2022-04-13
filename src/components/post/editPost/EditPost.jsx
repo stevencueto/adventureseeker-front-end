@@ -60,14 +60,6 @@ export const EditPost = (props) => {
                 name="img"
                 required
             /><br/>
-            <input
-				value={edit.user}
-				onChange={(e) => handleChange (e)}
-				type="text"
-				placeholder="User"
-                name="user"
-                required
-            /><br/>
             <button>Submit</button>
         </form>
   )

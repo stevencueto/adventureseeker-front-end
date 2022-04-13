@@ -1,0 +1,20 @@
+.register-form{
+    width: 300px;
+}
+.register-intructions{
+    padding: .3em;
+    margin-bottom: .5em;
+    width: 180px;
+    font-size: .8em;
+    text-align: center;
+}
+.error-mesage{
+    color: rgba(235, 26, 26, 0.74);
+    margin-top: 1.8em;
+    padding: 10px;
+    text-align: center;
+}
+
+.heading{
+    font-size: 2em;
+}

@@ -40,14 +40,6 @@ export const NewPost = (props) => {
                 name="img"
                 required
             /><br/>
-            <input
-				value={props.newPost.user}
-				onChange={(e) => props.handleNewPostChange(e)}
-				type="text"
-				placeholder="User"
-                name="user"
-                required
-            /><br/>
             <button>Submit</button>
         </form>
   )

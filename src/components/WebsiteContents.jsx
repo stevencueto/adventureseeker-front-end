@@ -6,6 +6,7 @@ import { NewPost } from "./post/NewPost/NewPost"
 import APILink from "../apiConfig"
 import Login from './login/Login'
 import Register from './register/Register'
+import axios from 'axios'
 export const WebsiteContents = () => {
     let navigate = useNavigate();
     const [allPost, setAllPost] = useState([])
@@ -13,9 +14,10 @@ export const WebsiteContents = () => {
         title: "",
         location:"",
         description: "",
-        img: "",
+        img: null,
         likes: 20
     })
+    const [img, setImg] = useState('')
     const getDate = () => {
         const date = new Date();
             const yyyy = date.getFullYear();
@@ -38,23 +40,31 @@ export const WebsiteContents = () => {
         setNewPost(prev => {
             return {
                 ...prev,
-                [name]: type === "files" ? files[0] : value
+                [name]: type === "file" ? files[0] : value
             }
         })
-        console.log(e.target)
+        console.log(type , name, value, 'ues')
+        console.log(newPost.img, 'file')
     }
     const makeNewPost = async()=>{
-        const formData = new FormData();
-        for(const name in newPost) {
-            formData.append(name, newPost[name]);
-          }
-        console.log(newPost)
-        try {
+        console.log(newPost.img, 'img')
+          try {
+                const formData = new FormData();
+                formData.append('file', img)
+                formData.append('upload_preset', 'post')
+                const req = await fetch('https://api.cloudinary.com/v1_1/dkmbw4f6d/image/upload/', {
+                    method: "POST",
+                    body: formData
+                })
+                console.log(req)
+                const img = await req.json()
+                newPost.img = await img.url
+                console.log(newPost, 'o')
             const request = await fetch(`http://127.0.0.1:8000/api/post/user/`, {
                 method: 'POST',
-                body: formData,
-                    headers: {
-                    'Authorization': 'Token ' + localStorage.getItem('token')
+                body: JSON.stringify(newPost),
+                headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
             if(request.status === 201){
@@ -76,13 +86,22 @@ export const WebsiteContents = () => {
         }
     }
     const editPost = async(post)=>{
-        console.log(post)
         try {
+            if(typeof(post.img) !== "string"){
+                const formData = new FormData();
+                formData.append('file', post.img)
+                formData.append('upload_preset', 'post')
+                const req = await fetch('cloudinary://565195333223589:Zi2NyDx6GtgjZ9VMaz_RHiZtinM@dkmbw4f6d', {
+                    method: "POST",
+                    body: formData
+                })
+                const img = await req.json()
+                post.img = await img.url
+            }
             const request = await fetch(`${APILink}api/post/${post.id}`, {
                 method: 'PUT',
                 body: JSON.stringify(post),
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
@@ -102,9 +121,7 @@ export const WebsiteContents = () => {
         try {
             const request = await fetch(`${APILink}api/post/${post.id}`, {
                 method: 'DELETE',
-                body: JSON.stringify(post),
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
@@ -144,7 +161,7 @@ export const WebsiteContents = () => {
             <Route path='/register' exact element={<Register/>}/>
             <Route path='/' exact element={<AllPost allPost={allPost} editPost={editPost} deletePost={deletePost}></AllPost>}/>
             <Route path='/profile' exact/>
-            <Route path='/new' exact element={<NewPost handleNewPostChange={handleNewPostChange} newPost={newPost} getDate={getDate} makeNewPost={makeNewPost}/>}/>
+            <Route path='/new' exact element={<NewPost setImg={setImg} img={img} handleNewPostChange={handleNewPostChange} newPost={newPost} getDate={getDate} makeNewPost={makeNewPost}/>}/>
         </Routes>        
         
     </main>

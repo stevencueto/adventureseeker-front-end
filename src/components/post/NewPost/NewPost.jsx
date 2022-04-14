@@ -7,7 +7,7 @@ export const NewPost = (props) => {
         props.makeNewPost()
     }
   return (
-         <form onSubmit={(e)=> submitNewPost(e)}>
+         <form onSubmit={(e)=> submitNewPost(e)} encType="multipart/form">
             <input
 				value={props.newPost.title}
 				onChange={(e) => props.handleNewPostChange(e)}
@@ -33,9 +33,9 @@ export const NewPost = (props) => {
                 required
             /><br/>
             <input
-				value={props.newPost.img}
 				onChange={(e) => props.handleNewPostChange(e)}
 				type="file"
+                accept="image/png, image/jpeg"
 				placeholder="Image"
                 name="img"
             /><br/>

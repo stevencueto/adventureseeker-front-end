@@ -28,21 +28,20 @@ const Login = () => {
 
 	const loginUser = async(e) => {
 		e.preventDefault()
-		const toLogIn = possibleUser.email.toLowerCase()
 		try{
 			const loginRequest = await fetch(`${APILink }api/auth/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					"withCredentials": true
+					// "withCredentials": true
 				},
-				body: JSON.stringify({email : toLogIn, password: possibleUser.password}),
+				body: JSON.stringify(possibleUser),
 			})
 			const loginResponse = await loginRequest.json()
 			if (loginRequest.status === 200) {
 				localStorage.setItem('token', loginResponse.token)
 				setPossibleUser({
-					email: '',
+					username: '',
 					password: ''
 				})
 				window.location.reload(false);
@@ -75,9 +74,9 @@ const Login = () => {
 					onChange={(e) => 
 						updatePossibleUser(e)
 					}
-					type="email"
+					type="name"
 					placeholder="Email"
-                    name="email"
+                    name="username"
 					className='login-input'
                     required
 					ref={loginRef}

@@ -5,7 +5,7 @@ export const EditPost = (props) => {
         title: props.post.title,
         location: props.post.location,
         description: props.post.description,
-        img: props.post.img,
+        img: "",
         current_date: props.post.current_date,
         user: props.post.user,
         likes: props.post.likes,
@@ -13,6 +13,10 @@ export const EditPost = (props) => {
     })
 
     const submitNewPost = (e)=>{
+        if(!edit.img){
+            edit.img = props.post.img;
+        }
+        console.log(edit)
         e.preventDefault();
         props.editPost(edit)
         props.hide(false)
@@ -27,7 +31,7 @@ export const EditPost = (props) => {
         })
     }
   return (
-    <form onSubmit={(e)=> submitNewPost(e)}>
+    <form onSubmit={(e)=> submitNewPost(e)} encType="multipart/form">
             <input
 				value={edit.title}
 				onChange={(e) => handleChange (e)}
@@ -56,9 +60,9 @@ export const EditPost = (props) => {
 				value={edit.img}
 				onChange={(e) => handleChange (e)}
 				type="file"
+                accept="image/png, image/jpeg"
 				placeholder="Image"
                 name="img"
-                required
             /><br/>
             <button>Submit</button>
         </form>

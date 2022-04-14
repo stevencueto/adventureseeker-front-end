@@ -3,7 +3,6 @@ import {useState} from 'react'
 export const NewPost = (props) => {
     const submitNewPost = (e)=>{
         e.preventDefault();
-        props.getDate()
         props.makeNewPost()
     }
   return (

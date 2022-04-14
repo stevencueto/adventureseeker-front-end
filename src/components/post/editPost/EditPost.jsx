@@ -5,7 +5,7 @@ export const EditPost = (props) => {
         title: props.post.title,
         location: props.post.location,
         description: props.post.description,
-        img: "",
+        img: props.post.description,
         current_date: props.post.current_date,
         user: props.post.user,
         likes: props.post.likes,
@@ -26,7 +26,7 @@ export const EditPost = (props) => {
         setEdit(prev => {
             return {
                 ...prev,
-                [name]: type === "files" ? files[0] : value
+                [name]: type === "file" ? files[0] : value
             }
         })
     }
@@ -57,7 +57,6 @@ export const EditPost = (props) => {
                 required
             /><br/>
             <input
-				value={edit.img}
 				onChange={(e) => handleChange (e)}
 				type="file"
                 accept="image/png, image/jpeg"

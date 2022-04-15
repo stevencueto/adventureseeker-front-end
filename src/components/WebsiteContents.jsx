@@ -114,6 +114,7 @@ export const WebsiteContents = () => {
                     'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
+            console.log(request)
             if(request.status === 200){
                 const response = await request.json()
                 setAllPost(response)

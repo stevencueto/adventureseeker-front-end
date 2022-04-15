@@ -1,7 +1,6 @@
 import { EditPost } from "../../editPost/EditPost"
 import { useState } from "react"
 import APILink from "../../../../apiConfig"
-import LikeButton from "./likedButton/LikedButton"
 export const IndividualPost = (props) => {
     const [show, setShow] = useState(false)
     const hide =()=>{
@@ -32,11 +31,13 @@ export const IndividualPost = (props) => {
         <p>{props.post.location}</p>
         <p>{props.post.img}</p>
         <p>{props.post.current_date} date</p>
-        <p>{props.post.user}</p>
-        <p>{props.post.liked_by} liked by</p>
+        <p>{props.post.user.username}</p>
+        <ul>{props.post.liked_by.map((one)=>{
+          return <li key={one.username}>{one.username}</li>
+                  })}</ul>
         <button onClick={()=>props.deletePost(props.post)}>Delete?</button>
         <button onClick={hide}>edit</button>
-        <LikeButton onClick={like}></LikeButton>
+        <button onClick={like}>Like</button>
         {show ? <EditPost post={props.post} editPost={props.editPost} hide={hide}></EditPost> : null}
     </div>
   )

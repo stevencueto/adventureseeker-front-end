@@ -117,6 +117,7 @@ export const WebsiteContents = () => {
             console.log(request)
             if(request.status === 200){
                 const response = await request.json()
+                console.log(response)
                 setAllPost(response)
             }
         }catch(err){

@@ -1,0 +1,19 @@
+.post{
+    width: 90%;
+}
+.post h3{
+    text-align: center;
+}
+
+.post p {
+    width: 98%;
+    padding: 3px 5px;
+}
+
+.post img{
+    width: 100%;
+}
+
+.post ul li{
+    list-style: none;
+}

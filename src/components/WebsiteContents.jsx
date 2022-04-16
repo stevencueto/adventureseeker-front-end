@@ -1,12 +1,13 @@
 import {Route, Routes, useNavigate} from 'react-router-dom'
 import './websitecomponent.css'
 import { AllPost } from "./post/AllPost/AllPost"
-import { useState, useEffect } from "react"
+import { useState, useEffect} from "react"
 import { NewPost } from "./post/NewPost/NewPost"
 import APILink from "../apiConfig"
 import Login from './login/Login'
 import Register from './register/Register'
-import axios from 'axios'
+import { MyProfile } from './Users/MyProfile'
+
 export const WebsiteContents = () => {
     let navigate = useNavigate();
     const [allPost, setAllPost] = useState([])
@@ -26,15 +27,12 @@ export const WebsiteContents = () => {
                 [name]: type === "file" ? files[0] : value
             }
         })
-        console.log(type , name, value, 'ues')
-        console.log(newPost.img, 'file')
     }
     const makeNewPost = async()=>{
         try {
             const formData = new FormData();
             for(const one in newPost){
                 formData.append(one, newPost[one])
-                console.log(newPost[one], 'sup')
             }
     
             const request = await fetch(`${APILink}api/post/user/`, {
@@ -56,7 +54,6 @@ export const WebsiteContents = () => {
                 })
                 navigate("/", { replace: true });
             }
-            console.log(request)
         } catch (error) {
             console.log(error)
             
@@ -67,7 +64,6 @@ export const WebsiteContents = () => {
             const formData = new FormData();
             for(const one in post){
                 formData.append(one, post[one])
-                console.log(post[one], 'sup')
             }
             const request = await fetch(`${APILink}api/post/${post.id}`, {
                 method: 'PUT',
@@ -78,7 +74,6 @@ export const WebsiteContents = () => {
             })
             if(request.status === 200){
                 const response = await request.json()
-                console.log(request)
                 const newAllPost =  allPost.map((one)=> one.id === post.id ? response : one)
                 setAllPost(newAllPost)
             }
@@ -88,7 +83,6 @@ export const WebsiteContents = () => {
         }
     }
     const deletePost = async(post)=>{
-        console.log(post)
         try {
             const request = await fetch(`${APILink}api/post/${post.id}`, {
                 method: 'DELETE',
@@ -114,16 +108,34 @@ export const WebsiteContents = () => {
                     'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
-            console.log(request)
             if(request.status === 200){
                 const response = await request.json()
-                console.log(response)
                 setAllPost(response)
             }
         }catch(err){
             console.log(err)
         }
     }
+    const like = async(id)=>{
+        const liked = {
+            post_id: id
+          }
+        try {
+          const req = await fetch(`${APILink}api/post/like/${id}`, {
+            method: "PATCH",
+            headers: {
+              'Authorization': 'Token ' + localStorage.getItem('token'),
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(liked)
+          })
+          if(req.ok === true){
+              populateFunction()
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
     useEffect(()=>{
         populateFunction()
     }, [])
@@ -132,8 +144,8 @@ export const WebsiteContents = () => {
         <Routes>
             <Route path='/login' exact element={<Login/>}/>
             <Route path='/register' exact element={<Register/>}/>
-            <Route path='/' exact element={<AllPost allPost={allPost} editPost={editPost} deletePost={deletePost}></AllPost>}/>
-            <Route path='/profile' exact/>
+            <Route path='/' exact element={<AllPost like={like} allPost={allPost} editPost={editPost} deletePost={deletePost}></AllPost>}/>
+            <Route path='/profile' element={<MyProfile></MyProfile>} exact/>
             <Route path='/new' exact element={<NewPost setImg={setImg} img={img} handleNewPostChange={handleNewPostChange} newPost={newPost} makeNewPost={makeNewPost}/>}/>
         </Routes>        
         

@@ -5,7 +5,7 @@ export const AllPost = (props) => {
   return (
     <div>
         {props.allPost.length > 0 ? props.allPost.map((post)=>{
-            return <IndividualPost editPost={props.editPost} key={`${post.id}post`} post={post} deletePost={props.deletePost}/>
+            return <IndividualPost editPost={props.editPost} key={`${post.id}post`} post={post} deletePost={props.deletePost} like={props.like}/>
         }) : null}
     </div>
   )

@@ -1,12 +1,14 @@
 
    
 import React from 'react'
-import { useState, useEffect, useRef} from 'react'
+import { useState, useEffect, useRef, useContext} from 'react'
 import { useNavigate } from 'react-router-dom'
 import './login.css'
 import APILink from '../../apiConfig'
+import UserContext from '../../GlobalContext'
 
 const Login = () => {
+	const {user, setUser, findUser}= useContext(UserContext)
 	let navigate = useNavigate();
 	const loginRef = React.createRef(null)
 	const errPassword = useRef(null)
@@ -40,12 +42,14 @@ const Login = () => {
 			const loginResponse = await loginRequest.json()
 			if (loginRequest.status === 200) {
 				localStorage.setItem('token', loginResponse.token)
+				localStorage.setItem('user', JSON.stringify(loginResponse.user))
+				console.log(loginResponse)
+				setUser(loginResponse.user)
 				setPossibleUser({
 					username: '',
 					password: ''
 				})
-				window.location.reload(false);
-				// navigate("/", { replace: true });
+				navigate("/", { replace: true });
 			} else{
 				setErrMessage(loginResponse.non_field_errors)
 			}
@@ -55,9 +59,7 @@ const Login = () => {
 		
 	}
 	useEffect(() => {
-		const token = localStorage.getItem('token')
-		if (token) navigate("/", { replace: true });
-		loginRef.current.focus()
+		findUser()
 	}, [])
 
 	

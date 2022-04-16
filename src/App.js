@@ -3,8 +3,8 @@ import { WebsiteContents } from './components/WebsiteContents';
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 import { Route, Routes } from 'react-router-dom';
-import React, { useState, useEffect } from 'react'
-
+import React, { useState, useEffect, useMemo } from 'react'
+import UserContext from './GlobalContext'
 function App() {
   const [cleanupFunction, setCleanupFuction] = useState(false)
   const [activeMenu, setActiveMenu] = useState('menu')
@@ -21,11 +21,19 @@ function App() {
       setCleanupFuction(false)
     }
   }, [])
+  const [user, setUser]= useState(null)
+  const findUser = ()=>{
+    const locate =localStorage.getItem('user')
+    if(locate) return setUser(JSON.parse(locate))
+  }
+  const provValue = useMemo(()=>({user, setUser, findUser}), [user, setUser])
   return (
     <div className="App">
-      <Header activeMenu={activeMenu}></Header>
+      <UserContext.Provider value={provValue}>
+      <Header activeMenu={activeMenu} toggleMenu={toggleMenu}></Header>
       <WebsiteContents></WebsiteContents>
       <Footer/>
+      </UserContext.Provider>
     </div>
   );
 }

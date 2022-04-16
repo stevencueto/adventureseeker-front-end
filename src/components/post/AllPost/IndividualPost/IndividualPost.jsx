@@ -7,8 +7,10 @@ import FunctionContext from "../../../../FunctionContex"
 export const IndividualPost = (props) => {
   const {like, editPost, deletePost} = useContext(FunctionContext)
   const [post, setPost] = useState({})
+  const userInPost = props.post.user
   const [owner , setOwner] = useState(false)
   const [liked_by , setLiked_by]=useState([])
+  const [numberOfLikes, setNumberOfLikes] = useState(0)
   const [likes, setLikes] = useState(false)
     const [show, setShow] = useState(false)
     const hide =()=>{
@@ -20,13 +22,20 @@ export const IndividualPost = (props) => {
       liked_by.forEach((one)=>{
         if (Object.values(one).includes(user.id)){
           setLikes(true)
-          console.log(one)
+        }else{
+          setLikes(false)
         }
       })
-      const userinPost = props.post.user
-      if(Object.values(userinPost).includes(user.id)){
+      if(Object.values(userInPost).includes(user.id)){
         setOwner(user)
-      }   
+      }
+      let likeNum = 0;
+      if(liked_by.length > 0){
+        for(const one in liked_by){
+
+        }
+      }
+      setNumberOfLikes(likeNum)
     }
    
     // useEffect(() => {
@@ -45,7 +54,6 @@ export const IndividualPost = (props) => {
       setPost(props.post)
       setLiked_by(props.post.liked_by)
       userInLikes()
-      // handle()
     }, [props.post])
   return (
     <div className="post">
@@ -57,9 +65,7 @@ export const IndividualPost = (props) => {
         <p>{post.location}</p>
         <p>Posted on {date.split('T')[0]}</p>
         <p>{post.description}</p>
-        <ul>{ post.liked_by[0]?.username ? post.liked_by.map((one)=>{
-          return <li key={one.username}>{one.username}</li>
-                  }) :  props.post.liked_by.reduce((el, one)=> el + one) }</ul>
+        <p>{numberOfLikes}</p>
          { owner && <><button onClick={()=>deletePost(post)}>Delete?</button>
         <button onClick={hide}>edit</button> </>}
         <button onClick={()=>like(post.id)}>{ likes ? "Dislike" : "like"}</button>

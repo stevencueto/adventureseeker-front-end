@@ -8,7 +8,7 @@ import Login from './login/Login'
 import Register from './register/Register'
 import { MyProfile } from './Users/MyProfile'
 import FunctionContext from '../FunctionContex'
-
+import UserContext from '../GlobalContext'
 export const WebsiteContents = () => {
     let navigate = useNavigate();
     const [allPost, setAllPost] = useState([])
@@ -19,6 +19,7 @@ export const WebsiteContents = () => {
         img: '',
         likes: 20
     })
+    const {setUser} = useContext(UserContext)
     const [img, setImg] = useState('')
     const handleNewPostChange = (e) =>{
         const {name, value, files, type} = e.target;
@@ -147,7 +148,7 @@ export const WebsiteContents = () => {
         <Routes>
             <Route path='/login' exact element={<Login/>}/>
             <Route path='/register' exact element={<Register/>}/>
-            <Route path='/' exact element={<AllPost></AllPost>}/>
+            <Route path='/' exact element={<AllPost allPost={allPost}></AllPost>}/>
             <Route path='/profile' element={<MyProfile></MyProfile>} exact/>
             <Route path='/new' exact element={<NewPost setImg={setImg} img={img} handleNewPostChange={handleNewPostChange} newPost={newPost} makeNewPost={makeNewPost}/>}/>
         </Routes>        

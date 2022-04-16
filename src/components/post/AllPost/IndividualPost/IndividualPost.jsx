@@ -3,10 +3,13 @@ import { useState, useContext, useEffect} from "react"
 import APILink from "../../../../apiConfig"
 import './post.css'
 import UserContext from "../../../../GlobalContext"
+import FunctionContext from "../../../../FunctionContex"
 export const IndividualPost = (props) => {
+  const {like, editPost, deletePost} = useContext(FunctionContext)
   const [post, setPost] = useState({})
-  const liked_by = post.liked_by
-  const [likes, setLike] = useState(false)
+  const [owner , setOwner] = useState(false)
+  const [liked_by , setLiked_by]=useState([])
+  const [likes, setLikes] = useState(false)
     const [show, setShow] = useState(false)
     const hide =()=>{
         setShow(!show)
@@ -14,16 +17,16 @@ export const IndividualPost = (props) => {
     const {user} = useContext(UserContext)
     const date = post.current_date
     const userInLikes =()=>{
-      if(liked_by.includes(user)){
-        setLike(true)
-        console.log('like')
-      }
-      console.log('bro')
-    }
-    const handle = () => {
-      const int =  setInterval( ()=> 
-      {userInLikes()}, 5000);
-      return () => clearTimeout(int)
+      liked_by.forEach((one)=>{
+        if (Object.values(one).includes(user.id)){
+          setLikes(true)
+          console.log(one)
+        }
+      })
+      const userinPost = props.post.user
+      if(Object.values(userinPost).includes(user.id)){
+        setOwner(user)
+      }   
     }
    
     // useEffect(() => {
@@ -40,8 +43,8 @@ export const IndividualPost = (props) => {
     // }, [setSearch, search]);
     useEffect(()=>{
       setPost(props.post)
-      console.log(liked_by)
-
+      setLiked_by(props.post.liked_by)
+      userInLikes()
       // handle()
     }, [props.post])
   return (
@@ -54,13 +57,13 @@ export const IndividualPost = (props) => {
         <p>{post.location}</p>
         <p>Posted on {date.split('T')[0]}</p>
         <p>{post.description}</p>
-        <ul>{post.liked_by.map((one)=>{
+        <ul>{ post.liked_by[0]?.username ? post.liked_by.map((one)=>{
           return <li key={one.username}>{one.username}</li>
-                  })}</ul>
-        <button onClick={()=>props.deletePost(post)}>Delete?</button>
-        <button onClick={hide}>edit</button>
-        <button onClick={()=>props.like(post.id)}>{ likes ? "Dislike" : "like"}</button>
-        {show ? <EditPost post={post} editPost={props.editPost} hide={hide}></EditPost> : null}
+                  }) :  props.post.liked_by.reduce((el, one)=> el + one) }</ul>
+         { owner && <><button onClick={()=>deletePost(post)}>Delete?</button>
+        <button onClick={hide}>edit</button> </>}
+        <button onClick={()=>like(post.id)}>{ likes ? "Dislike" : "like"}</button>
+        {show ? <EditPost post={post} editPost={editPost} hide={hide}></EditPost> : null}
       </>
       }
     </div>

@@ -1,12 +1,13 @@
 import {Route, Routes, useNavigate} from 'react-router-dom'
 import './websitecomponent.css'
 import { AllPost } from "./post/AllPost/AllPost"
-import { useState, useEffect} from "react"
+import { useState, useEffect, useContext, useMemo} from "react"
 import { NewPost } from "./post/NewPost/NewPost"
 import APILink from "../apiConfig"
 import Login from './login/Login'
 import Register from './register/Register'
 import { MyProfile } from './Users/MyProfile'
+import FunctionContext from '../FunctionContex'
 
 export const WebsiteContents = () => {
     let navigate = useNavigate();
@@ -136,19 +137,21 @@ export const WebsiteContents = () => {
           console.log(error)
         }
       }
-    useEffect(()=>{
+      const provValue = useMemo(()=>({like, editPost, deletePost}), [])
+      useEffect(()=>{
         populateFunction()
     }, [])
   return (
     <main className="main-wrapper">
+        <FunctionContext.Provider value={provValue}>
         <Routes>
             <Route path='/login' exact element={<Login/>}/>
             <Route path='/register' exact element={<Register/>}/>
-            <Route path='/' exact element={<AllPost like={like} allPost={allPost} editPost={editPost} deletePost={deletePost}></AllPost>}/>
+            <Route path='/' exact element={<AllPost></AllPost>}/>
             <Route path='/profile' element={<MyProfile></MyProfile>} exact/>
             <Route path='/new' exact element={<NewPost setImg={setImg} img={img} handleNewPostChange={handleNewPostChange} newPost={newPost} makeNewPost={makeNewPost}/>}/>
         </Routes>        
-        
+        </FunctionContext.Provider>
     </main>
   )
 }

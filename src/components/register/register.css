@@ -1,11 +1,9 @@
-.register-form{
-    width: 300px;
-}
+
 .register-intructions{
     padding: .3em;
     margin-bottom: .5em;
-    width: 180px;
-    font-size: .8em;
+    width: 300px;
+    font-size: 1em;
     text-align: center;
 }
 .error-mesage{

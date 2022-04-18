@@ -167,7 +167,6 @@
     .header{
         /* I know this looks weird but trust me it works lol */
         min-width: auto;
-        width: 100%;
-        max-width: 1600px;
+        width: 100vw;
     }
 }

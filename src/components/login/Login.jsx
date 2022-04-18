@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom'
 import './login.css'
 import APILink from '../../apiConfig'
 import UserContext from '../../GlobalContext'
-
+import Form from 'react-bootstrap/Form'
+import { Button, Container, Col} from 'react-bootstrap'
 const Login = () => {
 	const {user, setUser, findUser}= useContext(UserContext)
 	let navigate = useNavigate();
@@ -59,47 +60,53 @@ const Login = () => {
 		
 	}
 	useEffect(() => {
-		findUser()
+		const token = localStorage.getItem('token')
+		if(token){
+			navigate("/", { replace: true });
+		}
 	}, [])
 
 	
 
 	return (
-		<section className='home-grid website-container'>
-			<article className='login-section page login-err'>
+		<Container
+      className="d-flex justify-content-center align-items-center flex-direction-column"
+      style={{ minHeight: "100vh" }}
+    >
+		<Col>
+		
 			<h1 className='heading'>Login</h1>
 			{!!errMessage && <p className='error-mesage'> {errMessage} </p>}
-			<form onSubmit={(e) => loginUser(e)} className='login-form register-form' >
-				<label htmlFor="email" className='login-label'>Email</label>
-                <input
-					value={possibleUser.email}
-					onChange={(e) => 
+		<Form className='form-react' onSubmit={(e) => loginUser(e)}>
+			<Form.Group className="mb-3" controlId="formBasicEmail">
+				<Form.Label>Username</Form.Label>
+				<Form.Control type="text"
+				placeholder="Enter username"
+				value={possibleUser.email}
+				onChange={(e) => 
 						updatePossibleUser(e)
 					}
-					type="name"
-					placeholder="Email"
-                    name="username"
-					className='login-input'
-                    required
-					ref={loginRef}
-				/>
-				<label htmlFor="password" className='login-label' >Password</label>
-				<input
-					value={possibleUser.password}
+				name="username"
+				required
+				ref={loginRef}/>
+			</Form.Group>
+
+			<Form.Group className="mb-3" controlId="formBasicPassword">
+				<Form.Label>Password</Form.Label>
+				<Form.Control value={possibleUser.password}
 					onChange={(e) => updatePossibleUser(e)}
 					type="password"
 					placeholder="Password"
                     name="password"
                     required
-					className='login-input'
-					ref={errPassword}
-				/>
-				<button className='btn' type="submit" >login</button>
-			</form>
-
-			</article>
-			
-		</section>
+					ref={errPassword} />
+			</Form.Group>
+			<Button variant="primary" type="submit" className='btn-other'>
+				Submit
+			</Button>
+		</Form>
+		</Col>
+		</Container>
 	)
 }
 

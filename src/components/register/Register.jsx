@@ -1,8 +1,12 @@
-import React, { useState, useEffect, useRef} from 'react'
+import React, { useState, useEffect, useRef, useContext} from 'react'
 import { useNavigate } from 'react-router-dom'
 import './register.css'
 import APILink from '../../apiConfig'
+import Form from 'react-bootstrap/Form'
+import { Button, Container, Col} from 'react-bootstrap'
+import UserContext from '../../GlobalContext'
 const Register = ()=> {
+	const {user, setUser, findUser}= useContext(UserContext)
 
 	let navigate = useNavigate();
 	const userNameRef = useRef(null);
@@ -58,13 +62,20 @@ const Register = ()=> {
 		comparePassword();
 		passwordInstructionCheck()
 	}, [newUser.password, newUser.confirmPassword]);
-
+	useEffect(() => {
+		findUser()
+		const token = localStorage.getItem('token')
+		if(token){
+			navigate("/", { replace: true });
+		}
+		userNameRef.current.focus();
+	}, [])
 
 	const registerUser = async(e) =>{
 		if(newUser.password !== newUser.confirmPassword){
 			passwordRef.current.focus();
 		}
-		const toLogIn = newUser.email.toLowerCase()
+		newUser.email.toLowerCase()
 		e.preventDefault();
 		try{
 			const userRequest = await fetch(`${APILink}api/auth/register`, {
@@ -78,6 +89,7 @@ const Register = ()=> {
 			if (userRequest.status === 200) {
 				localStorage.setItem('token', fetchedUser.token);
 				window.localStorage.setItem('user', JSON.stringify(fetchedUser.user));
+				setUser(fetchedUser.user)
 				window.location.reload(false);
 				navigate("/all", { replace: true })
 			} else{
@@ -93,16 +105,6 @@ const Register = ()=> {
 		}
 		
 	};
-	useEffect(() => {
-		const token = localStorage.getItem('token')
-		if (!!token) navigate("/", { replace: true })
-		userNameRef.current.focus();
-	}, []);
-
-	useEffect(()=>{
-		userInstructionsCheck()
-	},[newUser.username])
-
 	const userInstructionsCheck = () =>{
 		if(newUser.username){
 			if(validUser.test(newUser.username)){
@@ -112,95 +114,109 @@ const Register = ()=> {
 		}
 	}
 	
+	useEffect(()=>{
+		userInstructionsCheck()
+	},[newUser.username])
 
 	return (
-		<section className='home-grid website-container'>
-			<article className="login-section">
-			<h1 className='heading'>Register</h1>
+<Container
+className="d-flex justify-content-center align-items-center flex-direction-column"
+style={{ minHeight: "100vh" }}
+>
+  <Col>
+  
+		<h1 className='heading'>Register</h1>
 
 
-				{ errMessage && <p className='error-mesage'>
-						{errMessage}
-				</p> }
-				
-			<form className="login-form register-form"onSubmit={registerUser}>
-				<input
-					value={newUser.username}
-					onChange={updateNewUser}
-					type="text"
-					placeholder="Username"
-					name="username"
-					ref={userNameRef}
-					onFocus={()=> setUserInstructions(true)}
-					onBlur={() => setUserInstructions(false)}
-					autoComplete="off"
-					className='login-input'
-					required
-				/>
-				<br />
-				{ userInstructions 
-						&& 
-				<ol className="register-intructions">
+		{ errMessage && <p className='error-mesage'>
+				{errMessage}
+		</p> }
+  <Form className='form-react' onSubmit={(e) => registerUser(e)}>
+	  <Form.Group className="mb-3" controlId="formBasicEmail">
+		  <Form.Label>Username</Form.Label>
+		  <Form.Control
+		  value={newUser.username}
+		  onChange={updateNewUser}
+		  type="text"
+		  placeholder="Username"
+		  name="username"
+		  ref={userNameRef}
+		  onFocus={()=> setUserInstructions(true)}
+		  onBlur={() => setUserInstructions(false)}
+		  required/>
+	  </Form.Group>
+	  { userInstructions &&
+	  <Form.Text className="text-muted">
+	<ol className="register-intructions">
 					<li className="register-intructions">	Must be 6 to 24 characters.</li>
 					<li className="register-intructions">Must begin with a letter.</li>
-					<li className="register-intructions">Numbers are okay.</li>
-					<li className="register-intructions">"@"  "." "+" "-" "_" are the special charachters allowed</li>
+					<li className="register-intructions"> @ . + - _ </li>
 				</ol>
-				}
-				<input
-					value={newUser.email}
-					onChange={updateNewUser}
-					type="email"
-					placeholder="Email"
-					name="email"
-					ref={emailRef}
-					className='login-input'
-					required
-					autoComplete="off"
+    </Form.Text>
+	}
+	  <Form.Group className="mb-3" controlId="formBasicEmail">
+		  <Form.Label>Email</Form.Label>
+		  <Form.Control type="email"
+		  value={newUser.email}
+		  onChange={updateNewUser}
+		  placeholder="Email"
+		  name="email"
+		  ref={emailRef}
+		  required
+		  autoComplete="off"/>
+	  </Form.Group>
 
-				/>
-				<br />
-				<input
-					value={newUser.password}
-					onChange={ (e)=> updateNewUser(e)}
-					type="password"
-					placeholder="Password"
-					name="password"
-					onFocus={() => setPasswordInstructions(true)}
-					onBlur={() => setPasswordInstructions(false)}
-					className='login-input'
-					required
-
-				/>
-				<br />
-				{ passwordInstructions 
+	  <Form.Group className="mb-3" controlId="formBasicPassword">
+		  <Form.Label>Password</Form.Label>
+		  <Form.Control 
+		  value={newUser.password}
+		  onChange={ (e)=> updateNewUser(e)}
+		  type="password"
+		  placeholder="Password"
+		  name="password"
+		  onFocus={() => setPasswordInstructions(true)}
+		  onBlur={() => setPasswordInstructions(false)}
+		  required
+		  />
+	  </Form.Group>
+	  { passwordInstructions &&
+	  <Form.Text className="text-muted">
+	<ol className="register-intructions">
+			<li className="register-intructions">	Password bust be 8 to 24 characters.</li>
+			<li className="register-intructions"> Your password can’t be too similar to your other personal information.</li>
+			<li className="register-intructions"> Must include uppercase and lowercase letters, a number and a special character.</li>
+			<li className="register-intructions"> Allowed special characters are: <span className='special-charachter'>! @ # $ %</span></li>
+	</ol>
+    </Form.Text>
+	}
+	<Form.Group className="mb-3" controlId="formBasicPassword">
+		  <Form.Label>Confirm Password</Form.Label>
+		  <Form.Control 
+		  value={newUser.confirmPassword}
+		  onChange={ (e) => updateNewUser(e)}
+		  type="password"
+		  placeholder="Password"
+		  name="confirmPassword"
+		  required
+		  onFocus={()=> setConfirmPasswordInstruction(true)}
+		  onBlur={()=> setConfirmPasswordInstruction(false)}
+		  />
+	  </Form.Group>
+	  { confirmPasswordInstruction 
 					&& 
-				<ol className="register-intructions">
-                        <li className="register-intructions">	Password bust be 8 to 24 characters.</li>
-						<li className="register-intructions"> Must include uppercase and lowercase letters, a number and a special character.</li>
-						<li className="register-intructions"> Allowed special characters are: <span className='special-charachter'>! @ # $ %</span></li>
-				</ol>}
-				<input
-					value={newUser.confirmPassword}
-					onChange={ (e) => updateNewUser(e)}
-					type="password"
-					placeholder="Password"
-					name="confirmPassword"
-					className='login-input'
-					required
-					onFocus={()=> setConfirmPasswordInstruction(true)}
-					onBlur={()=> setConfirmPasswordInstruction(false)}
-				/>
-				<br />
-				{ confirmPasswordInstruction 
-					&& 
-				<p className="register-intructions">
+					<Form.Text className="text-muted">
+						<p className="register-intructions">
                         Passwords must Match.
-				</p>}
-				<button className='btn  blocked-element' disabled={button}> Register</button>
-			</form>
-			</article>
-		</section>
+				</p>
+				</Form.Text>
+				}
+				
+	  <Button variant="primary" type="submit" className='btn-other' disabled={button}>
+		  Submit
+	  </Button>
+  </Form>
+  </Col>
+  </Container>
 	)
 }
 

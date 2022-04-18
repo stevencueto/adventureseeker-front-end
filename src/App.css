@@ -4,5 +4,38 @@
     padding: 0;
 }
 body{
-    max-width: 1600px;
+    max-width: 1700px;
+}
+
+.form-react{
+    width: 95%;
+    max-width: 800px;
+}
+
+.btn.btn-other{
+    display: block;
+    margin: 0 auto;
+}
+
+.form-label{
+    display: block;
+    margin: 0 auto;
+}
+
+.post-details p{
+    padding: 2px 4px;
+    margin: 5px auto;
+    text-transform: capitalize;
+}
+
+.btn-container{
+    margin: 0 auto;
+    width: 200px;
+    display: flex;
+    justify-content: space-around;
+}
+.post-cont{
+    display: grid;
+    grid-column: 1;
+    gap: .3em;
 }

@@ -36,6 +36,9 @@
     max-width: 440px;
 
 }
+.heading{
+    text-align: center;
+}
 /* .login-form label{ 
     display: block;
     text-align: center;

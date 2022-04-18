@@ -6,7 +6,8 @@ import { NewPost } from "./post/NewPost/NewPost"
 import APILink from "../apiConfig"
 import Login from './login/Login'
 import Register from './register/Register'
-import { MyProfile } from './Users/MyProfile'
+import Header from './header/Header'
+// import { MyProfile } from './Users/MyProfile'
 import FunctionContext from '../FunctionContex'
 import UserContext from '../GlobalContext'
 export const WebsiteContents = () => {
@@ -30,6 +31,37 @@ export const WebsiteContents = () => {
             }
         })
     }
+    const populateFunction = async() =>{
+        try{
+            const request = await fetch(`${APILink}api/post/`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token')
+                }
+            })
+            if(request.status === 200){
+                const response = await request.json()
+                setAllPost(response)
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+    const findME = async() => {
+		try{
+			const req = await fetch(`${APILink }api/auth/user`, {
+				method: 'GET',
+				headers: {
+          'Authorization': 'Token ' + localStorage.getItem('token')
+				},
+			})
+			const res = await req.json()
+			if (req.ok === true) {
+				setUser(res)
+			}
+		}catch(err){
+		}
+	}
     const makeNewPost = async()=>{
         try {
             const formData = new FormData();
@@ -44,7 +76,7 @@ export const WebsiteContents = () => {
                         'Authorization': 'Token ' + localStorage.getItem('token')
                 }
             })
-            if(request.status === 201){
+            if(request.ok === true){
                 const response = await request.json()
                 setAllPost([...allPost, response ])
                 setNewPost({
@@ -81,7 +113,6 @@ export const WebsiteContents = () => {
             }
         } catch (error) {
             console.log(error)
-            
         }
     }
     const deletePost = async(post)=>{
@@ -94,30 +125,16 @@ export const WebsiteContents = () => {
             })
             console.log(request)
             if(request.ok === true){
+                console.log(allPost, 'allpost')
                 const newAllPost =  allPost.filter((one)=> one.id !== post.id)
                 setAllPost(newAllPost)
+                console.log(newAllPost)
             }
         } catch (error) {
             console.log(error)
-            
         }
     }
-    const populateFunction = async() =>{
-        try{
-            const request = await fetch(`${APILink}api/post/`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Token ' + localStorage.getItem('token')
-                }
-            })
-            if(request.status === 200){
-                const response = await request.json()
-                setAllPost(response)
-            }
-        }catch(err){
-            console.log(err)
-        }
-    }
+
     const like = async(id)=>{
         const liked = {
             post_id: id
@@ -142,15 +159,19 @@ export const WebsiteContents = () => {
       useEffect(()=>{
         populateFunction()
     }, [])
+    useEffect(()=>{
+        findME()
+    }, [allPost])
+
   return (
     <main className="main-wrapper">
         <FunctionContext.Provider value={provValue}>
+        <Header setImg={setImg} img={img} handleNewPostChange={handleNewPostChange} newPost={newPost} makeNewPost={makeNewPost}></Header>
+
         <Routes>
             <Route path='/login' exact element={<Login/>}/>
             <Route path='/register' exact element={<Register/>}/>
             <Route path='/' exact element={<AllPost allPost={allPost}></AllPost>}/>
-            <Route path='/profile' element={<MyProfile></MyProfile>} exact/>
-            <Route path='/new' exact element={<NewPost setImg={setImg} img={img} handleNewPostChange={handleNewPostChange} newPost={newPost} makeNewPost={makeNewPost}/>}/>
         </Routes>        
         </FunctionContext.Provider>
     </main>

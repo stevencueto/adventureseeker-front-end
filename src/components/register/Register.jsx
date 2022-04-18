@@ -75,6 +75,8 @@ const Register = ()=> {
 		if(newUser.password !== newUser.confirmPassword){
 			passwordRef.current.focus();
 		}
+		newUser.confirmPassword = null;
+		console.log(newUser)
 		e.preventDefault();
 		try{
 			const userRequest = await fetch(`${APILink}api/auth/register`, {

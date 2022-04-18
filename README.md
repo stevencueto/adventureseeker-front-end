@@ -68,3 +68,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+### About Adventure Seeker
+the link here [https://adventureseeker.herokuapp.com/]
+Adventure Seeker is a social media application for adventurous people, where users can share pictures of their previous travel experiences. the app allows users to make, edit and delete their posts, as well as like someone else's post. 
+Coming soon users are going to be able to leave comments as well as add friends. 
+
+The technologies I used were Django and PostgreSQL and React on the front end with React-router, Bootstrap, and React Icons as the dependencies, The future for this app is including mini earth with the integration from google maps to see all the locations people have posted from, the globe I'm going to use Three.js.

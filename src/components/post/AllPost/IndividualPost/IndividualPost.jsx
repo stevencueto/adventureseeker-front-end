@@ -42,7 +42,6 @@ export const IndividualPost = (props) => {
           likeNum++
         }
       setNumberOfLikes(likeNum)
-      console.log(props.post)
     }
     useEffect(()=>{
       handleClick()
@@ -65,7 +64,7 @@ export const IndividualPost = (props) => {
           <Button variant="secondary" onClick={handleShow}>
                 edit
             </Button> </>}
-          <Button variant={ likes ? "primary" : 'secondary'} onClick={()=>{ like(post.id); handleClick()}}>like</Button>
+          <Button variant={ likes ? "primary" : 'secondary'} onClick={()=>{ like(post.id); setLikes(!likes)}}>like</Button>
           <EditPost post={props.post} editPost={editPost} handleShow={handleShow} handleClose={handleClose} show={show}></EditPost>
         </div>
        

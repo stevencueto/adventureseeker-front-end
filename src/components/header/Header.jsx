@@ -29,9 +29,9 @@ const Header  = (props) => {
           { user && <NavDropdown.Item href="/" onClick={logOut}>Logout</NavDropdown.Item>}
           { !user && <NavDropdown.Item href="/login">Login</NavDropdown.Item>}
           <NavDropdown.Divider />
-          <NavDropdown.Item  href={ user ? '/profile' : '/register'}>
+          {!user && <NavDropdown.Item  href={ user ? '/profile' : '/register'}>
             {user ? 'Profile' : 'Register'}
-          </NavDropdown.Item>
+          </NavDropdown.Item>}
         </NavDropdown>
     </Nav>
     </Container>

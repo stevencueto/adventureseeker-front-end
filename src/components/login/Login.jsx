@@ -50,6 +50,7 @@ const Login = () => {
 					username: '',
 					password: ''
 				})
+				window.location.reload(false);
 				navigate("/", { replace: true });
 			} else{
 				setErrMessage(loginResponse.non_field_errors)

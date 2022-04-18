@@ -57,7 +57,7 @@ export const IndividualPost = (props) => {
           <p> <GoLocation/>{props.post.location}</p>
           <p>Posted on {date.split('T')[0].replace('/-/g', '/')}</p>
           <p>{props.post.description} </p>
-          <p>{numberOfLikes} {likes === 1 ? "like" :'Likes'}</p>
+          <p>{numberOfLikes} {numberOfLikes === 1 ? "like" :'Likes'}</p>
         </div>
         <div className="d-flex btn-container">
           { owner && <> <Button variant="secondary" onClick={()=>deletePost(post)}>Delete?</Button>

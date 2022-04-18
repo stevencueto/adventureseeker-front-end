@@ -1,4 +1,4 @@
-*::after, *::before, *{
+*{
     box-sizing: border-box;
     margin: 0 auto;
     padding: 0;
@@ -6,7 +6,9 @@
 body{
     max-width: 1700px;
 }
-
+#body{
+    margin: 0 auto;
+}
 .form-react{
     width: 95%;
     max-width: 800px;

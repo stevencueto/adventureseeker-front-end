@@ -18,7 +18,7 @@ const Header  = (props) => {
     findUser()
   }, [user])
   return (
-    <Navbar bg="black" variant="dark" className='position-fixed' style={{width: '100vw', backgroundColor: 'black'}}>
+    <Navbar bg="black" variant="dark" className='position-fixed' style={{width: '100vw', backgroundColor: 'black', maxWidth: '1700px'}}>
     <Container>
     <Navbar.Brand href="/">Adventure Seeker</Navbar.Brand>
     <Nav className="me-auto">

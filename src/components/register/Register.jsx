@@ -75,13 +75,13 @@ const Register = ()=> {
 		if(newUser.password !== newUser.confirmPassword){
 			passwordRef.current.focus();
 		}
-		newUser.email.toLowerCase()
 		e.preventDefault();
 		try{
 			const userRequest = await fetch(`${APILink}api/auth/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					"withCredentials": true
 				},
 					body: JSON.stringify(newUser),
 				});

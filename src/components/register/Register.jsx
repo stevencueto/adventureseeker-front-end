@@ -102,6 +102,7 @@ const Register = ()=> {
 				}
 		}catch(err){
 			console.log(err);
+			setErrMessage("Server Error");
 		}
 		
 	};

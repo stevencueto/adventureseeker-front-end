@@ -55,7 +55,7 @@ const Login = () => {
 				setErrMessage(loginResponse.non_field_errors)
 			}
 		}catch(err){
-			setErrMessage('Failed to communite with server')
+			setErrMessage('Server Error')
 		}
 		
 	}
